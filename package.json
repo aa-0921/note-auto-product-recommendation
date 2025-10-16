@@ -1,7 +1,7 @@
 {
-  "name": "note-auto-renai",
+  "name": "note-auto-product-recommendation",
   "version": "1.0.0",
-  "description": "恋愛・人間関係系note自動化スクリプト",
+  "description": "商品紹介・お買い物系note自動化スクリプト",
   "type": "module",
   "main": "scripts/autoCreateAndDraftNote.js",
   "scripts": {
@@ -22,9 +22,9 @@
   "keywords": [
     "note",
     "automation",
-    "renai",
-    "love",
-    "relationship"
+    "product",
+    "shopping",
+    "recommendation"
   ],
   "author": "aa-0921",
   "license": "MIT",
@@ -49,7 +49,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/aa-0921/note-auto-renai.git"
+    "url": "https://github.com/aa-0921/note-auto-product-recommendation.git"
   }
   
 }
