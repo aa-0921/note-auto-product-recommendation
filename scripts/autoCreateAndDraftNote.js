@@ -1,5 +1,5 @@
 // autoCreateAndDraftNote.js
-// 薄いラッパー：既存のCLI引数・動作は維持しつつ、実装は共有ライブラリに委譲
+// 商品紹介・お買い物系note自動化スクリプト用の薄いラッパー
 
 import { runWithCore } from '@aa-0921/note-auto-core';
 
@@ -11,84 +11,76 @@ export { affiliateConfig, affiliateLinks };
 
 (async () => {
   await runWithCore(async ({ core, wantsBackground }) => {
-    // アカウント固有の題材・切り口（ここで管理）
-    const topics = [
-      '腸活',
-      '人間関係',
-      '職場の人間関係',
-      '恋愛',
-      'メンタル',
-      '引き寄せの法則',
-      '自己肯定感',
-      '習慣化',
-      'マインドフルネス',
-      'HSP(繊細さん)',
-      '依存体質の克服法',
-      '感情コントロール',
-      'SNS疲れ',
-      '毒親との関係性',
-      'イライラの原因と対処',
-      '嫉妬心の乗り越え方',
-      '自分軸と他人軸',
-      '人に流されない方法',
-      '一人の時間の過ごし方',
-      'わかってほしい病',
-      '無気力・無関心モードのとき',
-      '承認欲求の扱い方',
-      '怒りの手放し方',
-      '感謝できない日の処方箋',
-      '親密感への恐れ',
-      '曖昧な関係に悩んでる人へ',
-    ];
+    console.log('[DEBUG] スクリプト実行開始');
 
-    const patterns = [
-      '一歩踏み込んだ理解',
-      '具体的な活用方法',
-      '楽にする方法',
-      'ランキング',
-      'ランキング-トップ5',
-      'まつわるQ&Aまとめ',
-      'やってはいけないNG行動',
-      '初心者が最初の1週間でやることリスト',
-      '専門家に聞いた極意',
-      '正しい理解',
-      '続けるためのモチベーション維持法',
-      'ありがちな勘違いと正しいやり方',
-      '成功例・失敗例から学ぶ',
-      '絶望ランキング',
-      'メンタル崩壊ランキング',
-      'やってよかったベスト3',
-      '今すぐやめるべき3つの行動',
-      '私がどん底から回復するまでにやった5つのこと',
-      '読むだけでラクになる話',
-      '一番ラクだった方法',
-      '科学的に正しい○○の習慣',
-      '○○タイプ別の対処法',
-      '朝5分でできる○○',
-      '「実は逆効果」な○○',
-      '見落としがちな○○の落とし穴',
-      '○○診断(自己診断チェックリスト)',
-      'コミュニケーション苦手な人のための○○講座',
-      '「知らなきゃ損!」な裏テク',
-      'やって気づいた○○の本当の意味',
-      '5年後に差がつく○○',
-      'なぜかうまくいく人がやってる習慣',
-      '「○○ができない」あなたへ',
-      '意識低い系でもできる○○',
-      '3日坊主でも続いた○○のコツ',
-      '「向いてないかも」と思った時に読む話',
-      'モヤモヤを言語化してみた',
-      '初心者が陥りがちな○○の落とし穴',
-      '親には聞けない○○の話',
-      '○○をやめたら人生が軽くなった',
-      '忙しくてもできる○○',
-      'あなたのための「逃げ方」リスト',
-      '○○をやる前に知っておきたい3つのこと',
-    ];
+    // 商品紹介・お買い物系の題材・切り口（空配列で初期化）
+    const topics = [];
+    const patterns = [];
+    console.log('[DEBUG] topics と patterns を初期化しました');
+
+    // アフィリエイトリンクをランダムに一つ選択して商品情報を抽出
+    console.log('[DEBUG] アフィリエイトリンクの総数:', affiliateLinks.length);
+    const randomIndex = Math.floor(Math.random() * affiliateLinks.length);
+    console.log('[DEBUG] 選択されたインデックス:', randomIndex);
+
+    const selectedAffiliateLink = affiliateLinks[randomIndex];
+    console.log('[DEBUG] 選択されたアフィリエイトリンク:', selectedAffiliateLink.substring(0, 100) + '...');
+
+    // アフィリエイトリンクから商品情報を抽出する関数
+    function extractProductInfo(affiliateLink) {
+      console.log('[DEBUG] extractProductInfo 関数を開始');
+      const lines = affiliateLink.split('\n');
+      console.log('[DEBUG] アフィリエイトリンクの行数:', lines.length);
+
+      let productName = '';
+      let productDescription = '';
+      let productUrl = '';
+
+      for (const line of lines) {
+        // URLを抽出
+        if (line.includes('https://amzn.to/') || line.includes('amazon.co.jp')) {
+          productUrl = line.trim();
+          console.log('[DEBUG] 商品URL検出:', productUrl);
+        }
+        // 商品名を抽出（👆で始まる行）
+        if (line.includes('👆') && line.includes('👆')) {
+          const match = line.match(/👆(.+?)(?:\n|$)/);
+          if (match) {
+            productName = match[1].trim();
+            console.log('[DEBUG] 商品名検出:', productName);
+          }
+        }
+        // 商品説明を抽出（👆以外の説明文）
+        if (line.trim() && !line.includes('👆') && !line.includes('https://') && 
+            !line.match(/^[📚💝💧💙🥤✨🍅❤️🍵🌿💪🏋️🍚🌾🦶👟💪🥤🍯🐝🍞❤️‍🩹🍜🥢🛑🍯🥣🉐🍣🐟🥜🌰]+$/)) {
+          productDescription += line.trim() + ' ';
+        }
+      }
+
+      console.log('[DEB UG] 抽出完了 - 商品名:', productName);
+      console.log('[DEBUG] 抽出完了 - 商品説明:', productDescription.trim().substring(0, 100) + '...');
+      console.log('[DEBUG] 抽出完了 - 商品URL:', productUrl);
+
+      return {
+        name: productName,
+        description: productDescription.trim(),
+        url: productUrl
+      };
+    }
+    
+    const productInfo = extractProductInfo(selectedAffiliateLink);
+    console.log('[INFO] 選択された商品情報:', productInfo);
+    console.log('[INFO] 記事冒頭に挿入するURL:', productInfo.url);
+
+    // 商品情報をtopicsとpatternsに設定
+    topics.push(productInfo.name);
+    patterns.push(productInfo.description);
+    console.log('[DEBUG] topics に追加:', topics);
+    console.log('[DEBUG] patterns に追加:', patterns);
 
     const rewriteConditionsLines = [
-      'あなたは女性の心理カウンセラーです。',
-      '指定の見出し本文が短いため、200文字以上になるよう実体験や具体例、アドバイスを交えて厚くリライトしてください。',
+      'あなたは商品レビュー・お買い物アドバイザーです。',
+      '指定の見出し本文が短いため、200文字以上になるよう実体験や具体例、商品の詳細情報を交えて厚くリライトしてください。',
       '【注意】',
       '- タイトルや見出しは出力せず、本文のみを返す。',
       '- メタ情報（追加要素や文字数など）は一切出力しない。',
@@ -100,11 +92,13 @@ export { affiliateConfig, affiliateLinks };
       '- 自然で読みやすい日本語のみを出力する。',
       '- 完成した文章のみを返し、システムメッセージや処理情報は含めない。',
     ];
+    console.log('[DEBUG] rewriteConditionsLines を設定しました');
 
-    // LLM用システムプロンプト（参考実装に準拠）
-    const systemMessage = 'あなたは日本語のnote記事編集者です。';
+    // LLM用システムプロンプト（商品紹介・お買い物系に変更）
+    const systemMessage = 'あなたは商品レビュー・お買い物アドバイザーです。商品の魅力を分かりやすく伝えるnote記事編集者です。';
+    console.log('[DEBUG] systemMessage を設定しました');
 
-    // 記事生成プロンプト条件（参考実装の「promptLines」相当）
+    // 記事生成プロンプト条件（商品紹介・お買い物系に変更）
     const articleConditionsLines = [
       'タイトル、本文、ハッシュタグ（#から始まるもの）を含めてください。',
       'タイトルは1行目に「# [実際のタイトル]」として記載してください。',
@@ -112,7 +106,7 @@ export { affiliateConfig, affiliateLinks };
       '本文にはタイトルを含めないでください。',
       '本文は見出しや箇条書きも交えて1000文字程度で丁寧にまとめてください。',
       'ハッシュタグは記事末尾に「#〇〇 #〇〇 ...」の形式でまとめてください。',
-      'あなたはプロのカウンセラーで、プロの編集者です。',
+      'あなたはプロの商品レビュアーで、プロの編集者です。',
       '読みやすさを重視してください。',
       '可能であればランキング形式にしてください。',
       '改行を多めに入れてください。',
@@ -129,53 +123,82 @@ export { affiliateConfig, affiliateLinks };
       '【重要】特殊トークンや制御文字（<|begin_of_sentence|>、<｜begin▁of▁sentence｜>等）は絶対に出力しないでください。',
       '【重要】自然で読みやすい日本語のみを出力し、システムメッセージや処理情報は一切含めないでください。',
       '【重要】完成した記事のみを返してください。',
+      '商品の魅力や効果、使い方、コスパなどを具体的に説明してください。',
+      '実際に使った感想や体験談を交えてください。',
+      '購入を検討している読者にとって有益な情報を提供してください。',
+      '',
+      '【指定商品について】',
+      `商品名: ${productInfo.name}`,
+      `商品説明: ${productInfo.description}`,
+      '',
+      '※記事の冒頭には商品URLが自動的に挿入されます。本文にはURLを含めないでください。',
+      '上記の指定商品を中心とした記事を作成してください。',
+      '指定商品の魅力、効果、使い方、コスパなどを詳しく説明し、',
+      '読者が購入を検討できるような魅力的な記事にしてください。',
+      '指定商品以外の関連商品や比較商品についても言及してください。',
     ];
+    console.log('[DEBUG] articleConditionsLines を設定しました（商品名:', productInfo.name, '）');
 
-    // タグ生成の指示文（参考実装：固定タグの必須含有を要求）
+    // タグ生成の指示文（商品紹介・お買い物系に変更）
     const tagsInstruction =
-      '記事内容から最も関連する日本語タグを3〜5個生成し、半角スペース区切りで出力してください。必ず「#引き寄せ #引き寄せの法則 #裏技 #PR」を含めてください。本文や説明は禁止。';
+      '記事内容から最も関連する日本語タグを3〜5個生成し、半角スペース区切りで出力してください。必ず「#お買い物 #商品紹介 #おすすめ #レビュー #PR」を含めてください。本文や説明は禁止。';
+    console.log('[DEBUG] tagsInstruction を設定しました');
 
-    // タイトル装飾用絵文字（参考実装のセット）
+    // タイトル装飾用絵文字（商品紹介・お買い物系に変更）
     const titleEmojis = [
-      '❤️',
-      '🌸',
-      '🛑',
-      '㊙︎',
-      '🟥',
-      '🈲',
-      '🉐',
-      '㊗️',
-      '㊙️',
-      '⭕',
-      '‼️',
+      '🛍️',
+      '💰',
+      '⭐',
       '🎉',
+      '💎',
+      '🔥',
+      '✨',
+      '👍',
+      '💯',
+      '🛒',
+      '🎁',
+      '💝',
     ];
+    console.log('[DEBUG] titleEmojis を設定しました（絵文字数:', titleEmojis.length, '）');
 
     // ----------------------------------------------------------------------------------
 
-    // マガジン誘導文（参考実装の体裁を反映）
+    // マガジン誘導文（商品紹介・お買い物系に変更）
     const magazinePromotion = [
-      '🐈　🐾　🐈‍⬛　🐾　🐈　🐾　🐈‍⬛　🐾　🐈　🐾　🐈‍⬛　🐾　🐈　🐾　🐈‍⬛　',
+      '🛍️　💰　🛍️　💰　🛍️　💰　🛍️　💰　🛍️　💰　🛍️　💰　🛍️　💰　🛍️',
       '',
-      '私が皆さんにおすすめしているコスパ抜群のグッズをご紹介しています！',
+      '私が皆さんにおすすめしているコスパ抜群の商品をご紹介しています！',
       '効果テキメンなので皆さん試してみていただけると幸いです😊',
       '',
-      '【コスパ抜群の幸せグッズ】',
+      '【コスパ抜群のおすすめ商品】',
       '✔ 効果テキメンのアイテム',
       '✔ 実際に使って良かったもの',
-      'そんなグッズを厳選してご紹介。',
+      'そんな商品を厳選してご紹介。',
       '',
       'ぜひ試してみてください！',
       '',
       'https://note.com/counselor_risa/m/m72a580a7e712',
       '',
-      '🐈　🐾　🐈‍⬛　🐾　🐈　🐾　🐈‍⬛　🐾　🐈　🐾　🐈‍⬛　🐾　🐈　🐾　🐈‍⬛　',
+      '🛍️　💰　🛍️　💰　🛍️　💰　🛍️　💰　🛍️　💰　🛍️　💰　🛍️　💰　🛍️',
       '',
     ].join('\n');
+    console.log('[DEBUG] magazinePromotion を設定しました');
 
-    // アソシエイト表記文（参考実装の文言）
+    // アソシエイト表記文（商品紹介・お買い物系に変更）
     const amazonAssociateText =
-      'Amazon のアソシエイトとして、「恋愛・人間関係カウンセラーRisa」は適格販売により収入を得ています。';
+      'Amazon のアソシエイトとして、「商品紹介・お買い物アドバイザー」は適格販売により収入を得ています。';
+    console.log('[DEBUG] amazonAssociateText を設定しました');
+
+    console.log('[INFO] すべての設定が完了しました。core.runAutoCreateAndDraftNote を実行します');
+    console.log('[DEBUG] 実行パラメータ - background:', wantsBackground);
+    console.log('[DEBUG] 実行パラメータ - topics:', topics);
+    console.log('[DEBUG] 実行パラメータ - patterns:', patterns.map(p => p.substring(0, 50) + '...'));
+    console.log('[DEBUG] 実行パラメータ - affiliateLink:', selectedAffiliateLink.substring(0, 50) + '...');
+    console.log('[DEBUG] 実行パラメータ - productInfo.url:', productInfo.url);
+
+    // 記事の冒頭に商品URLを固定値として挿入するコンテンツを作成
+    const prefixContent = productInfo.url ? `${productInfo.url}\n\n` : '';
+    console.log('[DEBUG] prefixContent を設定しました（固定値として記事冒頭に挿入）:', prefixContent);
 
     // 記事の自動生成と下書き保存機能を実行
     await core.runAutoCreateAndDraftNote({
@@ -187,7 +210,8 @@ export { affiliateConfig, affiliateLinks };
       rewriteConditionsLines,
       tagsInstruction,
       titleEmojis,
-      // affiliateLink,
+      prefixContent, // 記事の冒頭に挿入するコンテンツ（一行目のURL）
+      affiliateLink: selectedAffiliateLink, // 選択されたアフィリエイトリンクを渡す
       affiliateLinks,
       magazinePromotion,
       amazonAssociateText,
@@ -196,6 +220,6 @@ export { affiliateConfig, affiliateLinks };
       audibleAffiliateEnabled: affiliateConfig.audibleAffiliateEnabled,
       kindleAffiliateEnabled: affiliateConfig.kindleAffiliateEnabled,
     });
-    console.log('記事の自動生成と下書き保存が完了しました');
+    console.log('[INFO] 商品紹介記事の自動生成と下書き保存が完了しました');
   });
 })();

@@ -65,7 +65,9 @@ ai:
   # model: 'openai/gpt-oss-20b:free'
   # ↓429に引っかかりにくいかも？
   # 2025/10/12 記事のクオリティまあまあ
+  # 文字が途中で切れるが、クオリティは良さそう→出力tokenを増やすとうまくいった
   model: 'z-ai/glm-4.5-air:free'
+
   # model: 'deepseek/deepseek-chat-v3-0324:free'
   # model: 'moonshotai/kimi-k2:free'
   # model: 'cognitivecomputations/dolphin-mistral-24b-venice-edition:free'
@@ -121,7 +123,7 @@ ai:
 
   # ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
   temperature: 0.7
-  max_tokens: 1200
+  max_tokens: 6s000
 note:
   login_method: 'email_password'
   cookie_secret_name: 'NOTE_COOKIE'
