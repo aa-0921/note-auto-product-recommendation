@@ -132,6 +132,7 @@ export { affiliateConfig, affiliateLinks };
       `商品説明: ${productInfo.description}`,
       '',
       '※記事の冒頭には商品URLが自動的に挿入されます。本文にはURLを含めないでください。',
+      '【重要】購入方法については記事に含めないでください。商品リンクは自動的に挿入されます。',
       '上記の指定商品を中心とした記事を作成してください。',
       '指定商品の魅力、効果、使い方、コスパなどを詳しく説明し、',
       '読者が購入を検討できるような魅力的な記事にしてください。',
@@ -196,9 +197,50 @@ export { affiliateConfig, affiliateLinks };
     console.log('[DEBUG] 実行パラメータ - affiliateLink:', selectedAffiliateLink.substring(0, 50) + '...');
     console.log('[DEBUG] 実行パラメータ - productInfo.url:', productInfo.url);
 
-    // 記事の冒頭に商品URLを固定値として挿入するコンテンツを作成
-    const prefixContent = productInfo.url ? `${productInfo.url}\n\n` : '';
-    console.log('[DEBUG] prefixContent を設定しました（固定値として記事冒頭に挿入）:', prefixContent);
+    // 記事の冒頭に商品情報（商品名、URL、商品説明）を挿入するコンテンツを作成
+    let prefixContent = '';
+    if (productInfo.url) {
+      const prefixParts = [];
+      
+      // 最初にURLを追加
+      prefixParts.push(productInfo.url);
+      
+      // 空行
+      prefixParts.push('');
+      
+      // 商品名を見出しとして追加
+      if (productInfo.name) {
+        prefixParts.push(`## ${productInfo.name}`);
+        prefixParts.push('');  // 空行
+      }
+      
+      // 商品説明を追加（絵文字のみの行を除外）
+      if (productInfo.description) {
+        // 商品説明を行ごとに分割し、絵文字のみの行を除外
+        const descriptionLines = productInfo.description.split('\n');
+        const filteredLines = descriptionLines.filter(line => {
+          const trimmedLine = line.trim();
+          // 空行は保持
+          if (trimmedLine === '') return true;
+          // 絵文字のみの行を除外（Unicode絵文字の範囲をチェック）
+          const emojiOnlyRegex = /^[\u{1F000}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F300}-\u{1F5FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{FE00}-\u{FE0F}\u{200D}\s　]+$/u;
+          return !emojiOnlyRegex.test(trimmedLine);
+        });
+        const cleanedDescription = filteredLines.join('\n').trim();
+        if (cleanedDescription) {
+          prefixParts.push(cleanedDescription);
+          prefixParts.push('');  // 空行
+        }
+      }
+      
+      // 最後にURLを再度追加
+      prefixParts.push(productInfo.url);
+      
+      prefixContent = prefixParts.join('\n') + '\n\n';
+    }
+    console.log('[DEBUG] prefixContent を設定しました（固定値として記事冒頭に挿入）:');
+    console.log('[DEBUG] prefixContent の長さ:', prefixContent.length, '文字');
+    console.log('[DEBUG] prefixContent の内容（最初の200文字）:', prefixContent.substring(0, 200));
 
     // 記事の自動生成と下書き保存機能を実行
     await core.runAutoCreateAndDraftNote({
@@ -210,7 +252,7 @@ export { affiliateConfig, affiliateLinks };
       rewriteConditionsLines,
       tagsInstruction,
       titleEmojis,
-      prefixContent, // 記事の冒頭に挿入するコンテンツ（一行目のURL）
+      prefixContent, // 記事の冒頭に挿入するコンテンツ（商品名、URL、商品説明）
       affiliateLink: selectedAffiliateLink, // 選択されたアフィリエイトリンクを渡す
       affiliateLinks,
       magazinePromotion,
