@@ -2,6 +2,7 @@
 // 商品紹介・お買い物系note自動化スクリプト用の薄いラッパー
 
 import { runWithCore } from '@aa-0921/note-auto-core';
+import crypto from 'crypto';
 
 // アフィリエイト設定とリンクを別ファイルから読み込み
 import { affiliateConfig, affiliateLinks } from './affiliateConfig.js';
@@ -19,12 +20,43 @@ export { affiliateConfig, affiliateLinks };
     console.log('[DEBUG] topics と patterns を初期化しました');
 
     // アフィリエイトリンクをランダムに一つ選択して商品情報を抽出
-    console.log('[DEBUG] アフィリエイトリンクの総数:', affiliateLinks.length);
-    const randomIndex = Math.floor(Math.random() * affiliateLinks.length);
-    console.log('[DEBUG] 選択されたインデックス:', randomIndex);
+    console.log('');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('[INFO] アフィリエイトリンクのランダム選択');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('[INFO] 利用可能なアフィリエイトリンクの総数:', affiliateLinks.length);
+    
+    // 暗号学的に安全な乱数生成器を使用してランダムインデックスを生成
+    // より偏りの少ない、高品質なランダム性を実現
+    const randomBytes = crypto.randomBytes(4);
+    const randomValue = randomBytes.readUInt32BE(0);
+    const randomIndex = randomValue % affiliateLinks.length;
+    
+    console.log('[INFO] 生成された乱数値:', randomValue);
+    console.log('[INFO] 選択されたインデックス:', randomIndex, `(全${affiliateLinks.length}件中の ${randomIndex + 1} 番目)`);
+    console.log('[INFO] 選択確率:', `1/${affiliateLinks.length} = ${(100 / affiliateLinks.length).toFixed(2)}%`);
 
     const selectedAffiliateLink = affiliateLinks[randomIndex];
-    console.log('[DEBUG] 選択されたアフィリエイトリンク:', selectedAffiliateLink.substring(0, 100) + '...');
+    console.log('[INFO] 選択されたアフィリエイトリンク（4、5、6行目）:');
+    
+    // 4、5、6行目を表示
+    const linkLines = selectedAffiliateLink.split('\n');
+    if (linkLines.length >= 4) {
+      console.log('       4行目:', linkLines[3]);
+    }
+    if (linkLines.length >= 5) {
+      console.log('       5行目:', linkLines[4]);
+    }
+    if (linkLines.length >= 6) {
+      console.log('       6行目:', linkLines[5]);
+    }
+    if (linkLines.length < 4) {
+      console.log('      ', '(4行未満のリンクです)');
+      console.log('      ', selectedAffiliateLink);
+    }
+    
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('');
 
     // アフィリエイトリンクから商品情報を抽出する関数
     function extractProductInfo(affiliateLink) {
