@@ -214,17 +214,18 @@ export { affiliateConfig, affiliateLinks };
         prefixParts.push('');  // 空行
       }
       
-      // 商品説明を追加（絵文字のみの行を除外）
+      // 商品説明を追加（通常の文字が含まれない行を除外）
       if (productInfo.description) {
-        // 商品説明を行ごとに分割し、絵文字のみの行を除外
+        // 商品説明を行ごとに分割し、通常の文字が含まれない行を除外
         const descriptionLines = productInfo.description.split('\n');
         const filteredLines = descriptionLines.filter(line => {
           const trimmedLine = line.trim();
           // 空行は保持
           if (trimmedLine === '') return true;
-          // 絵文字のみの行を除外（Unicode絵文字の範囲をチェック）
-          const emojiOnlyRegex = /^[\u{1F000}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F300}-\u{1F5FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{FE00}-\u{FE0F}\u{200D}\s　]+$/u;
-          return !emojiOnlyRegex.test(trimmedLine);
+          // 通常の文字（日本語、英数字、一般的な記号）が含まれているかチェック
+          // ひらがな、カタカナ、漢字、英数字、基本的な記号のいずれかが含まれていればtrue
+          const hasNormalChars = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF\u3400-\u4DBFa-zA-Z0-9ぁ-んァ-ヶー一-龠々〆〤]/.test(trimmedLine);
+          return hasNormalChars;
         });
         const cleanedDescription = filteredLines.join('\n').trim();
         if (cleanedDescription) {
