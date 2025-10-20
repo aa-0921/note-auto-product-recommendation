@@ -220,36 +220,47 @@ export { affiliateConfig, affiliateLinks };
         prefixParts.push('');  // 空行
       }
       
-      // 商品説明を追加（通常の文字が含まれない行を除外）
+      // 商品説明を追加（先頭・末尾の絵文字装飾部分を除外）
       if (productInfo.description) {
-        // 商品説明を行ごとに分割し、通常の文字が含まれない行を除外
-        const descriptionLines = productInfo.description.split('\n');
-        console.log('[DEBUG] 商品説明の行数:', descriptionLines.length);
+        console.log('[DEBUG] 商品説明のクリーニング処理を開始');
+        console.log('[DEBUG] 元の商品説明の文字数:', productInfo.description.length);
         
-        const filteredLines = descriptionLines.filter((line, index) => {
-          const trimmedLine = line.trim();
-          
-          // 空行は保持
-          if (trimmedLine === '') {
-            console.log(`[DEBUG] 行${index}: 空行 -> 保持`);
-            return true;
+        let cleanedDescription = productInfo.description.trim();
+        
+        // 先頭の絵文字+記号+空白のみの連続部分を削除
+        // 通常の文字（日本語・英数字）が出てくるまで削除
+        const normalCharRegex = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF\u3400-\u4DBFa-zA-Z0-9ぁ-んァ-ヶー一-龠々〆〤]/;
+        
+        let startIndex = 0;
+        for (let i = 0; i < cleanedDescription.length; i++) {
+          if (normalCharRegex.test(cleanedDescription[i])) {
+            startIndex = i;
+            break;
           }
-          
-          // 通常の文字（日本語、英数字、一般的な記号）が含まれているかチェック
-          // ひらがな、カタカナ、漢字、英数字、基本的な記号のいずれかが含まれていればtrue
-          const hasNormalChars = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF\u3400-\u4DBFa-zA-Z0-9ぁ-んァ-ヶー一-龠々〆〤]/.test(trimmedLine);
-          
-          // デバッグログ
-          const preview = trimmedLine.length > 50 ? trimmedLine.substring(0, 50) + '...' : trimmedLine;
-          console.log(`[DEBUG] 行${index}: "${preview}" -> ${hasNormalChars ? '保持' : '除外'}`);
-          
-          return hasNormalChars;
-        });
+        }
         
-        console.log('[DEBUG] フィルター前の行数:', descriptionLines.length);
-        console.log('[DEBUG] フィルター後の行数:', filteredLines.length);
+        if (startIndex > 0) {
+          console.log(`[DEBUG] 先頭から${startIndex}文字の絵文字装飾を削除`);
+          cleanedDescription = cleanedDescription.substring(startIndex);
+        }
         
-        const cleanedDescription = filteredLines.join('\n').trim();
+        // 末尾の絵文字+記号+空白のみの連続部分を削除
+        let endIndex = cleanedDescription.length;
+        for (let i = cleanedDescription.length - 1; i >= 0; i--) {
+          if (normalCharRegex.test(cleanedDescription[i])) {
+            endIndex = i + 1;
+            break;
+          }
+        }
+        
+        if (endIndex < cleanedDescription.length) {
+          console.log(`[DEBUG] 末尾から${cleanedDescription.length - endIndex}文字の絵文字装飾を削除`);
+          cleanedDescription = cleanedDescription.substring(0, endIndex);
+        }
+        
+        console.log('[DEBUG] クリーニング後の商品説明の文字数:', cleanedDescription.length);
+        console.log('[DEBUG] 削除された文字数:', productInfo.description.length - cleanedDescription.length);
+        
         if (cleanedDescription) {
           prefixParts.push(cleanedDescription);
           prefixParts.push('');  // 空行
