@@ -4,19 +4,13 @@
 // フォロワー増加用のTwitter投稿スクリプト
 
 import 'dotenv/config';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import RandomPostService from '@aa-0921/note-auto-core/src/services/RandomPostService.js';
 import Logger from '@aa-0921/note-auto-core/src/utils/Logger.js';
 import { posts } from '../data/follower-growth-posts.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 const logger = new Logger();
 const args = process.argv.slice(2);
 const isDryrun = args.includes('--dryrun');
-const HISTORY_FILE = path.join(__dirname, '../data/post-history.json');
 
 async function main() {
   try {
@@ -30,17 +24,9 @@ async function main() {
       logger.info('');
     }
 
-    const service = new RandomPostService(logger, {
-      historyFile: HISTORY_FILE
-    });
+    const service = new RandomPostService(logger);
 
-    // await service.postRandomTweet(posts, { dryrun: isDryrun });
-    await service.postRandomTweet(posts, { 
-      dryrun: isDryrun,
-      // 話題のハッシュタグを追加するか（文字数上限までギリギリ追加）
-      // includeTrending: false
-    });
-
+    await service.postRandomTweet(posts, { dryrun: isDryrun });
 
   } catch (error) {
     logger.error('❌ エラーが発生しました');
