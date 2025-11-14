@@ -225,19 +225,21 @@ export { affiliateConfig, affiliateLinks };
       '🛍️　💰　🛍️　💰　🛍️　💰　🛍️　💰　🛍️　💰　🛍️　💰　🛍️　💰　🛍️',
       '',
     ].join('\n');
-    console.log('[DEBUG] magazinePromotion を設定しました');
 
     // アソシエイト表記文（商品紹介・お買い物系に変更）
     const amazonAssociateText =
       'Amazon のアソシエイトとして、「商品紹介・お買い物アドバイザー」は適格販売により収入を得ています。';
     console.log('[DEBUG] amazonAssociateText を設定しました');
 
-    console.log('[INFO] すべての設定が完了しました。core.runAutoCreateAndDraftNote を実行します');
-    console.log('[DEBUG] 実行パラメータ - background:', wantsBackground);
-    console.log('[DEBUG] 実行パラメータ - topics:', topics);
-    console.log('[DEBUG] 実行パラメータ - patterns:', patterns.map(p => p.substring(0, 50) + '...'));
-    console.log('[DEBUG] 実行パラメータ - affiliateLink:', selectedAffiliateLink.substring(0, 50) + '...');
-    console.log('[DEBUG] 実行パラメータ - productInfo.url:', productInfo.url);
+    // おすすめ記事セクションの設定
+    const recommendedArticlesTitle = 'ぜひ読んでほしい！他のおすすめ記事😁';
+    const recommendedArticlesUrls = [
+      'https://note.com/product_osusume/n/na766b9ef6004',
+      'https://note.com/product_osusume/n/n6e1fa9d20855',
+      'https://note.com/product_osusume/n/n71411205464b',
+    ];
+
+
 
     // 記事の冒頭に商品情報（商品名、URL、商品説明）を挿入するコンテンツを作成
     let prefixContent = '';
@@ -331,6 +333,9 @@ export { affiliateConfig, affiliateLinks };
       affiliateTag: affiliateConfig.affiliateTag,
       audibleAffiliateEnabled: affiliateConfig.audibleAffiliateEnabled,
       kindleAffiliateEnabled: affiliateConfig.kindleAffiliateEnabled,
+      // おすすめ記事セクション設定
+      recommendedArticlesTitle,
+      recommendedArticlesUrls,
     });
     console.log('[INFO] 商品紹介記事の自動生成と下書き保存が完了しました');
   });
