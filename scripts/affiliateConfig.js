@@ -5,12 +5,14 @@
 const affiliateTag = 'product-osusume-22';
 const audibleAffiliateEnabled = true;
 const kindleAffiliateEnabled = true;
+const associateName = '🏅商品おすすめ情報🏅';
 
 // アフィリエイト設定をエクスポート
 export const affiliateConfig = {
   affiliateTag,
   audibleAffiliateEnabled,
   kindleAffiliateEnabled,
+  associateName,
 };
 
 // アフィリエイトリンク
