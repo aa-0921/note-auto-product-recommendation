@@ -12,14 +12,14 @@ export const saleTweetMessages = [
   '💖 「買ってよかった」と思える物を、年末のうちにひとつ迎えておきませんか？✨',
   '👛 「安い時に買う」だけでOK。いつもの消耗品をセール中に軽くまとめ買い🛒',
   '🌟 一年がんばった自分に、小さなご褒美をひとつだけ足してみませんか？💫🎁',
-  '🎉 いよいよAmazonブラックフライデー（アフターセール）。本番セール、始まります🔥',
+  '🎉 いよいよAmazonブラックフライデーセール。本番セール、始まります🔥',
   '🎊 2025年最後のビッグチャンス。気になっていたあの商品を狙うなら今🎁',
-  '😅 「ブラックフライデー（アフターセール）だけは買っちゃう」その気持ち、今年も一緒です✨',
+  '😅 「ブラックフライデーだけは買っちゃう」その気持ち、今年も一緒です✨',
   '🎉 毎年この時期だけは我慢せずにポチっと。1年で一番ゆるくて楽しい買い物デー💰',
   '😊 普段は我慢してるけど、この週末だけは「欲しかった物」にOKを出してあげませんか？🔥',
   '😭 「また買っちゃった…」と言いつつ、毎年ちょっと楽しみにしているセールです💸',
   '💸 普段は節約モードでも、この時期だけは「まとめ買い解禁」にしてもいいかもしれません🎊',
-  '🤫 ブラックフライデー（アフターセール）の日だけは、買い物ルールをゆるめてもいいかなと思っています✨',
+  '🤫 ブラックフライデーの日だけは、買い物ルールをゆるめてもいいかなと思っています✨',
 ];
 
 // 差分用の短い文章（一般的なセール案内用のひと言）
@@ -45,8 +45,8 @@ export const saleTweetPrefixVariations = [
 
 // ハッシュタグ配列
 export const saleTweetHashtags = [
-  '#Amazonブラックフライデー（アフターセール）',
-  '#ブラックフライデー（アフターセール）セール',
+  '#Amazonブラックフライデー',
+  // '#ブラックフライデー（アフターセール）セール',
   // '#アマゾンセール',
   // '#ブラックフライデー（アフターセール）',
   // '#お得情報',
@@ -61,15 +61,15 @@ export const saleTweetHashtags = [
 ];
 
 // アフィリエイトリンク配列
-const saleLinkBlackFridayMainUrl = `https://www.amazon.co.jp/blackfriday?&linkCode=ll2&tag=${affiliateTag}&linkId=213b50b8f3333d64c518a3817bcc1088&language=ja_JP&ref_=as_li_ss_tl`;
+const saleLinkBlackFridayMainUrl = `https://www.amazon.co.jp/blackfriday/2?_encoding=UTF8&pd_rd_w=ygD4C&content-id=amzn1.sym.deb8c7e3-e584-4f1c-bef7-5c8a19968d99&pf_rd_p=deb8c7e3-e584-4f1c-bef7-5c8a19968d99&pf_rd_r=YMVCW12K5WDRXTW6S222&pd_rd_wg=8ze3g&pd_rd_r=330bc4a7-b4c0-4fc1-b4cc-993aae48a763&linkCode=ll2&tag=${affiliateTag}&linkId=900a586885fe87e28b7abbff879b32eb&language=ja_JP&ref_=as_li_ss_tl`;
 // const saleLink80PercentUrl = `https://www.amazon.co.jp/blackfriday?ref_=nav_cs_td_bf_dt_cr&discounts-widget=%2522%257B%255C%2522state%255C%2522%253A%257B%255C%2522rangeRefinementFilters%255C%2522%253A%257B%255C%2522percentOff%255C%2522%253A%257B%255C%2522min%255C%2522%253A80%252C%255C%2522max%255C%2522%253A100%257D%257D%257D%252C%255C%2522version%255C%2522%253A1%257D%2522&linkCode=ll2&tag=${affiliateTag}&linkId=0f9989f6daa8f074182cafb0dfc61121&language=ja_JP&ref_=as_li_ss_tl`;
 // const saleLink60PercentUrl = `https://www.amazon.co.jp/blackfriday?ref_=nav_cs_td_bf_dt_cr&discounts-widget=%2522%257B%255C%2522state%255C%2522%253A%257B%255C%2522rangeRefinementFilters%255C%2522%253A%257B%255C%2522percentOff%255C%2522%253A%257B%255C%2522min%255C%2522%253A60%252C%255C%2522max%255C%2522%253A100%257D%257D%257D%252C%255C%2522version%255C%2522%253A1%257D%2522&linkCode=ll2&tag=${affiliateTag}&linkId=0f9989f6daa8f074182cafb0dfc61121&language=ja_JP&ref_=as_li_ss_tl`;
 
 export const saleTweetAffiliateLinks = [
-  `🌈 暮らしにポジティブな変化を！Amazonブラックフライデー（アフターセール）セール会場はこちら\n${saleLinkBlackFridayMainUrl}`,
-  `🚀 2025年最後のビッグチャンス！Amazonブラックフライデー（アフターセール）セール会場\n${saleLinkBlackFridayMainUrl}`,
-  `💎 心と暮らしが喜ぶ買い物を実現！Amazonブラックフライデー（アフターセール）セール\n${saleLinkBlackFridayMainUrl}`,
-  // `⏰ 時間投資で年末の忙しさを回避！Amazonブラックフライデー（アフターセール）セール会場\n${saleLinkBlackFridayMainUrl}`,
+  `🌈 暮らしにポジティブな変化を！セール会場はこちら\n${saleLinkBlackFridayMainUrl}`,
+  `🚀 2025年最後のビッグチャンス！セール会場はこちら\n${saleLinkBlackFridayMainUrl}`,
+  `💎 心と暮らしが喜ぶ買い物を実現！セール会場はこちら\n${saleLinkBlackFridayMainUrl}`,
+  // `⏰ 時間投資で年末の忙しさを回避！セール会場はこちら\n${saleLinkBlackFridayMainUrl}`,
     // `💰 最大80%OFF！底値を掴むチャンス！割引率80%以上の商品一覧\n${saleLink80PercentUrl}`,
   // `🎁 賢い購入で後悔をなくす！割引率60%以上の商品一覧\n${saleLink60PercentUrl}`,
 
