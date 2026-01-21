@@ -1,12 +1,12 @@
 name: Auto Post Time Sale Article
 
 on:
-  schedule:
-    # 毎日8時、13時、18時、0時（JST）に実行
-    - cron: '0 23 * * *' # JST 8:00 = UTC 23:00（前日）
-    - cron: '0 4 * * *' # JST 13:00 = UTC 4:00
-    - cron: '0 9 * * *' # JST 18:00 = UTC 9:00
-    - cron: '0 15 * * *' # JST 0:00 = UTC 15:00（前日）
+  # schedule:
+  # # 毎日8時、13時、18時、0時（JST）に実行
+  # - cron: '0 23 * * *' # JST 8:00 = UTC 23:00（前日）
+  # - cron: '0 4 * * *' # JST 13:00 = UTC 4:00
+  # - cron: '0 9 * * *' # JST 18:00 = UTC 9:00
+  # - cron: '0 15 * * *' # JST 0:00 = UTC 15:00（前日）
   workflow_dispatch:
 
 jobs:
