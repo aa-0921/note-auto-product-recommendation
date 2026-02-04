@@ -84,10 +84,36 @@ import { runWithCore } from '@aa-0921/note-auto-core';
     // ランダムで1つの前置きフレーズを選択
     const selectedSuffixOpeningPhrase = commentSuffixOpeningPhrases[Math.floor(Math.random() * commentSuffixOpeningPhrases.length)];
 
+    // コメントの挨拶・フォロー・スキ告知フレーズ配列（ランダムで1つ選択されます）
+    const commentGreetingPhrases = [
+      'コメントさせていただきます🛍️フォロー・スキもさせていただきました💡',
+      'コメントさせていただきます✨フォローとスキもいたしました🛍️',
+      'コメント失礼します💡フォロー・スキも🛍️',
+      '拝見してコメントしました🛍️フォロー・スキもさせていただきました💡',
+      'フォロー・スキさせていただきました💡コメントさせていただきます🛍️',
+      'フォロー・スキもさせていただきました✨コメントさせていただきます🛍️',
+      'フォローとスキもしました🛍️コメントさせていただきます💡',
+    ];
+
+    const selectedGreetingPhrase = commentGreetingPhrases[Math.floor(Math.random() * commentGreetingPhrases.length)];
+
+    // コメントの末尾に入れる締めフレーズ配列（ランダムで1つ選択されます）
+    const commentSuffixClosingPhrases = [
+      '私の記事の方にもコメント・フォロー・スキをいただけますと大変うれしいです・・🙇‍♂️',
+      '私の記事の方にもコメント・フォロー・スキいただけると嬉しいです🛍️',
+      '私の方の記事にもスキやフォロー・コメントいただけたら励みになります💡',
+      '私の記事へもコメント・フォロー・スキいただけると大変ありがたいです✨',
+      '私のブログの方にもコメント・フォロー・スキいただけますと幸いです・・🙇‍♂️',
+      '私の記事の方にもフォロー・スキ・コメントいただけると大変嬉しいです🛍️',
+      '私の記事へもコメント・フォロー・スキいただけたらありがたいです💡',
+    ];
+
+    const selectedSuffixClosingPhrase = commentSuffixClosingPhrases[Math.floor(Math.random() * commentSuffixClosingPhrases.length)];
+
     // コメントの先頭/末尾に付ける固定文（必要に応じてここを編集してください）
-    const commentPrefix = `${selectedOpeningPhrase} コメントさせていただきます🛍️フォロー・スキもさせていただきました💡`;
+    const commentPrefix = `${selectedOpeningPhrase} ${selectedGreetingPhrase}`;
     const commentSuffix =
-      `${selectedSuffixOpeningPhrase}、私の記事の方にもコメント・フォロー・スキをいただけますと大変うれしいです・・🙇‍♂️`;
+      `${selectedSuffixOpeningPhrase}、アイコンかアカウント名のところをクリックして、${selectedSuffixClosingPhrase}`;
     
     // コメント生成用のプロンプト（オプション、指定しない場合はデフォルトを使用）
     // プロンプト内で以下の変数を使用可能: {{title}}, {{headings}}, {{articleText}}
