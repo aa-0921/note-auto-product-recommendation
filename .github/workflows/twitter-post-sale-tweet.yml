@@ -54,7 +54,7 @@ jobs:
             libxrandr2 \
             libxshmfence1
 
-      - name: Install dependencies (product-recommendation)
+      - name: Install dependencies (renai)
         run: npm ci
 
       - name: Checkout note-auto-core

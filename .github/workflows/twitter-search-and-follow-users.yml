@@ -1,28 +1,38 @@
-name: Twitter Post Follower Growth
+name: Twitter Search and Follow Users
 
 on:
   # schedule:
-  # - cron: '0 18,0,6,12 * * *'  # JST 3時、9時、15時、21時（UTC 18時、0時、6時、12時）、6時間おきに4回実行
+  #   # JST 9時、12時、18時、21時に実行（UTCベース）
+  #   # JST = UTC + 9時間
+  #   - cron: '0 0 * * *'   # JST 09:00 (UTC 00:00)
+  #   - cron: '0 3 * * *'   # JST 12:00 (UTC 03:00)
+  #   - cron: '0 9 * * *'   # JST 18:00 (UTC 09:00)
+  #   - cron: '0 12 * * *'  # JST 21:00 (UTC 12:00)
   workflow_dispatch:
     inputs:
+      searchQuery:
+        description: '検索クエリ（例: フォロバ100）'
+        required: false
+        default: 'フォロバ100'
       dryrun:
-        description: 'Dryrun (true の場合は投稿しない)'
+        description: 'DRYRUNモード（実際にはフォローしない）'
         required: false
         default: 'false'
+        type: boolean
 
 jobs:
-  post:
+  search-and-follow:
     runs-on: ubuntu-latest
     permissions:
       contents: read
     concurrency:
-      group: twitter-post-follower-growth
+      group: twitter-search-and-follow-users
       cancel-in-progress: false
     env:
       TZ: Asia/Tokyo
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -30,27 +40,6 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-
-      - name: Install Chrome dependencies for Puppeteer
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            ca-certificates \
-            fonts-liberation \
-            libasound2t64 \
-            libatk1.0-0 \
-            libatk-bridge2.0-0 \
-            libcups2 \
-            libdrm2 \
-            libxkbcommon0 \
-            libgtk-3-0 \
-            libgbm1 \
-            libnss3 \
-            libxcomposite1 \
-            libxdamage1 \
-            libxfixes3 \
-            libxrandr2 \
-            libxshmfence1
 
       - name: Install dependencies (renai)
         run: npm ci
@@ -79,7 +68,7 @@ jobs:
           TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
           TWITTER_BEARER_TOKEN: ${{ secrets.TWITTER_BEARER_TOKEN }}
         run: |
-          node scripts/postFollowerGrowthTweet.js
+          node scripts/searchAndFollowUsers.js "フォロバ100"
 
       - name: Run script (manual)
         if: ${{ github.event_name == 'workflow_dispatch' }}
@@ -92,7 +81,8 @@ jobs:
         run: |
           if [ "${{ github.event.inputs.dryrun }}" = "true" ]; then
             echo "Run in dryrun mode"
-            node scripts/postFollowerGrowthTweet.js --dryrun
+            node scripts/searchAndFollowUsers.js "${{ github.event.inputs.searchQuery || 'フォロバ100' }}" --dryrun
           else
-            node scripts/postFollowerGrowthTweet.js
+            node scripts/searchAndFollowUsers.js "${{ github.event.inputs.searchQuery || 'フォロバ100' }}"
           fi
+
